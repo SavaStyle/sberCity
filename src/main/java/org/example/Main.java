@@ -5,8 +5,8 @@ import org.example.model.City;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
@@ -18,17 +18,30 @@ public class Main {
         scanner.useDelimiter("\r?\n");
         ArrayList<City> cities = new ArrayList<>();
 
+        HashMap<String, Integer> regions = new HashMap<String, Integer>();
 
         while (scanner.hasNext()) {
             City city = parseCSVLine(scanner.next());
+
+            if (!regions.containsKey(city.getRegion())) {
+                regions.put(city.getRegion(), 1);
+            } else {
+                regions.put(city.getRegion(), regions.get(city.getRegion()) + 1);
+            }
             cities.add(city);
         }
         scanner.close();
 
+        for (HashMap.Entry<String, Integer> item : regions.entrySet()) {
+            System.out.printf("%s-%d \n", item.getKey(), item.getValue());
+        }
+
+
+ /*
+ поиск мах населения
         City[] cityArray = new City[cities.size()];
         cities.toArray(cityArray);
-
-        Long max = 0L;
+     Long max = 0L;
         int id = 0;
         for (int i = 0; i < cityArray.length; i++) {
             if (cityArray[i].getPopulation() > max) {
@@ -38,14 +51,17 @@ public class Main {
         }
         DecimalFormat df = new DecimalFormat("###,###,###");
         System.out.println("[" + id + "] = " + df.format(max));
+        */
 
 
 /*
+сортировка по названию городов
         cities.sort((o1, o2) -> o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase()));
 
         for (City city : cities)
             System.out.println(city + "\n");
 
+сортировка по региону и городу
         List<City> sortedByDistrict = cities.stream().sorted(
                 Comparator.comparing(City::getDistrict).thenComparing(City::getName)
         ).collect(Collectors.toList());
@@ -53,7 +69,6 @@ public class Main {
         for (City city : sortedByDistrict)
             System.out.println(city);
     */
-
 
     }
 
