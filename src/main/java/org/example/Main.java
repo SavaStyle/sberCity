@@ -5,11 +5,9 @@ import org.example.model.City;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -18,25 +16,43 @@ public class Main {
         Path path = Paths.get(fileName);
         Scanner scanner = new Scanner(path);
         scanner.useDelimiter("\r?\n");
-        ArrayList<City> Cities = new ArrayList<>();
+        ArrayList<City> cities = new ArrayList<>();
+
 
         while (scanner.hasNext()) {
             City city = parseCSVLine(scanner.next());
-            Cities.add(city);
+            cities.add(city);
         }
         scanner.close();
 
-        Cities.sort((o1, o2) -> o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase()));
+        City[] cityArray = new City[cities.size()];
+        cities.toArray(cityArray);
 
-        for (City city : Cities)
+        Long max = 0L;
+        int id = 0;
+        for (int i = 0; i < cityArray.length; i++) {
+            if (cityArray[i].getPopulation() > max) {
+                max = cityArray[i].getPopulation();
+                id = i;
+            }
+        }
+        DecimalFormat df = new DecimalFormat("###,###,###");
+        System.out.println("[" + id + "] = " + df.format(max));
+
+
+/*
+        cities.sort((o1, o2) -> o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase()));
+
+        for (City city : cities)
             System.out.println(city + "\n");
 
-        List<City> sortedByDistrict = Cities.stream().sorted(
+        List<City> sortedByDistrict = cities.stream().sorted(
                 Comparator.comparing(City::getDistrict).thenComparing(City::getName)
         ).collect(Collectors.toList());
 
         for (City city : sortedByDistrict)
             System.out.println(city);
+    */
 
 
     }
